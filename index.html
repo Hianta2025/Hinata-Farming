@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 100px;
+        }
+        .login-box {
+            width: 300px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username" required><br>
+        <input type="password" id="password" placeholder="Password" required><br>
+        <button onclick="login()">Login</button>
+        <p id="error-msg" style="color: red;"></p>
+    </div>
+    
+    <script>
+        function login() {
+            var users = {
+                "admin": "1234", // Change credentials here
+                "user1": "password1"
+            };
+            
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var errorMsg = document.getElementById("error-msg");
+            
+            if (users[username] && users[username] === password) {
+                window.location.href = "https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit?pli=1&gid=0"; // Replace with your Google Sheets URL
+            } else {
+                errorMsg.innerText = "Invalid username or password!";
+            }
+        }
+    </script>
+</body>
+</html>
