@@ -41,11 +41,6 @@
         <h2>Login</h2>
         <input type="text" id="username" placeholder="Username" required><br>
         <input type="password" id="password" placeholder="Password" required><br>
-        <select id="region">
-            <option value="local">Local</option>
-            <option value="international">International</option>
-        </select>
-        <br>
         <button onclick="login()">Login</button>
         <button onclick="register()">Register</button>
         <p id="error-msg" style="color: red;"></p>
@@ -70,7 +65,6 @@
         function register() {
             var username = document.getElementById("username").value;
             var password = document.getElementById("password").value;
-            var region = document.getElementById("region").value;
             var errorMsg = document.getElementById("error-msg");
             var users = getStoredUsers();
             
@@ -82,7 +76,7 @@
             if (users[username]) {
                 errorMsg.innerText = "Username already taken!";
             } else {
-                users[username] = { password: password, approved: false, region: region };
+                users[username] = { password: password, approved: false };
                 saveUsers(users);
                 console.log("User registered:", users); // Debug log
                 errorMsg.innerText = "Registration successful! Waiting for admin approval.";
@@ -123,14 +117,10 @@
             var users = getStoredUsers();
             console.log("All users:", users); // Debugging log
             
-            let localUsers = Object.keys(users).filter(username => !users[username].approved && users[username].region === "local");
-            let internationalUsers = Object.keys(users).filter(username => !users[username].approved && users[username].region === "international");
-            
-            let choice = prompt("Approve users from: \n1. Local\n2. International");
-            let pendingUsers = choice === "1" ? localUsers : internationalUsers;
+            let pendingUsers = Object.keys(users).filter(username => !users[username].approved);
             
             if (pendingUsers.length === 0) {
-                alert("No users pending approval in this category.");
+                alert("No users pending approval.");
                 return;
             }
 
