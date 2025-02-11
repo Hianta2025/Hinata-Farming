@@ -47,9 +47,13 @@
     </div>
 
     <script>
-        var users = {}; // Stores usernames, passwords, and approval status
+        var users = JSON.parse(localStorage.getItem("users")) || {}; // Load stored users
         var activeUsers = {}; // Tracks logged-in users
         var adminPassword = "admin123"; // Admin approval password
+
+        function saveUsers() {
+            localStorage.setItem("users", JSON.stringify(users));
+        }
 
         function register() {
             var username = document.getElementById("username").value;
@@ -65,6 +69,7 @@
                 errorMsg.innerText = "Username already taken!";
             } else {
                 users[username] = { password: password, approved: false };
+                saveUsers();
                 errorMsg.innerText = "Registration successful! Waiting for admin approval.";
             }
         }
@@ -107,6 +112,7 @@
             if (adminPass === adminPassword) {
                 if (users[username]) {
                     users[username].approved = true;
+                    saveUsers();
                     alert(username + " has been approved!");
                 } else {
                     alert("User not found!");
