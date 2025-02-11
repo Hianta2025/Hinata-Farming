@@ -106,7 +106,7 @@
                 } else {
                     activeUsers[username] = true;
                     sessionStorage.setItem("loggedInUser", username);
-                    let googleSheetUrl = "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit";
+                    let googleSheetUrl = "https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit";
                     let popup = window.open(googleSheetUrl, "popupWindow", "width=800,height=600,resizable=yes,scrollbars=yes");
                     popup.onbeforeunload = function () {
                         delete activeUsers[username];
