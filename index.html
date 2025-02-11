@@ -56,7 +56,8 @@
         }
 
         var adminPassword = "admin123"; // Admin approval password
-        var googleSheetUrl = "https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit?pli=1&gid=0#gid=0"; // Direct Google Sheet URL
+        var googleSheetUrl = "https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit"; // Direct Google Sheet URL
+        var telegramChannelUrl = "https://t.me/yourtelegramchannel"; // Telegram Channel URL
 
         function register() {
             var username = document.getElementById("username").value;
@@ -99,13 +100,18 @@
                 sessionStorage.setItem("loggedInUser", username);
                 alert("Login successful!");
                 openGoogleSheet();
+                openTelegramChannel();
             } else {
                 errorMsg.innerText = "Invalid password!";
             }
         }
 
         function openGoogleSheet() {
-            let popup = window.open(googleSheetUrl, "popupWindow", "width=800,height=600,resizable=yes,scrollbars=yes");
+            window.open(googleSheetUrl, "popupWindow", "width=800,height=600,resizable=yes,scrollbars=yes");
+        }
+
+        function openTelegramChannel() {
+            window.open(telegramChannelUrl, "popupWindow", "width=600,height=800,resizable=yes,scrollbars=yes");
         }
 
         function approveUser() {
