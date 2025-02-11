@@ -106,7 +106,7 @@
                 } else {
                     activeUsers[username] = true;
                     sessionStorage.setItem("loggedInUser", username);
-                    let googleSheetUrl = "https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit?pli=1&gid=0#gid=0/edit";
+                    let googleSheetUrl = "https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit";
                     let popup = window.open(googleSheetUrl, "popupWindow", "width=800,height=600,resizable=yes,scrollbars=yes");
                     popup.onbeforeunload = function () {
                         delete activeUsers[username];
@@ -118,15 +118,24 @@
         }
 
         function approveUser() {
-            var username = prompt("Enter username to approve:");
-            var adminPass = prompt("Enter admin password:");
+            console.log("Registered users:", users); // Debugging log
+            let pendingUsers = Object.keys(users).filter(username => !users[username].approved);
+
+            if (pendingUsers.length === 0) {
+                alert("No users pending approval.");
+                return;
+            }
+
+            let username = prompt("Enter username to approve (Pending: " + pendingUsers.join(", ") + "):");
+            let adminPass = prompt("Enter admin password:");
+
             if (adminPass === adminPassword) {
                 if (users[username]) {
                     users[username].approved = true;
                     saveUsers();
                     alert(username + " has been approved!");
                 } else {
-                    alert("User not found!");
+                    alert("User not found! Check the username again.");
                 }
             } else {
                 alert("Incorrect admin password!");
