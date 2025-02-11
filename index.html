@@ -79,7 +79,8 @@
                 sessionStorage.setItem("loggedIn", "true");
                 showTelegramPopup();
                 setTimeout(() => {
-                    window.open("https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit?pli=1&gid=0", "_blank");
+                    let encodedLink = "aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMUt5c2lRVXpodnlQc2d2MzA4YUltRXQ2eUlLMnJrbzJuM0JJOHJIR29TRF EvZWRpdD9wbGk9MSZnaWQ9MA==";
+                    window.open(atob(encodedLink), "_blank");
                 }, 3000);
             } else {
                 errorMsg.innerText = "Invalid username or password!";
