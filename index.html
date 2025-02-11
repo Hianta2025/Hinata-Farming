@@ -91,9 +91,15 @@
             if (users[username].password === password) {
                 sessionStorage.setItem("loggedInUser", username);
                 alert("Login successful!");
+                openGoogleSheet();
             } else {
                 errorMsg.innerText = "Invalid password!";
             }
+        }
+
+        function openGoogleSheet() {
+            let googleSheetUrl = "https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit";
+            let popup = window.open(googleSheetUrl, "popupWindow", "width=800,height=600,resizable=yes,scrollbars=yes");
         }
 
         function approveUser() {
