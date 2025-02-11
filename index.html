@@ -59,9 +59,8 @@
             if (users[username] && users[username] === password) {
                 sessionStorage.setItem("loggedIn", "true");
                 setTimeout(() => {
-                    let encodedLink = "aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMUt5c2lRVXpodnlQc2d2MzA4YUltRXQ2eUlLMnJrbzJuM0JJOHJIR29TRF EvZWRpdD9wbGk9MSZnaWQ9MA==";
-                    let popup = window.open("", "popupWindow", "width=800,height=600,resizable=yes,scrollbars=yes");
-                    popup.document.write('<html><head><title>Google Sheet</title></head><body><iframe src="' + atob(encodedLink) + '" width="100%" height="100%" style="border:none;"></iframe></body></html>');
+                    let googleSheetUrl = "https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit?pli=1&gid=0";
+                    let popup = window.open(googleSheetUrl, "popupWindow", "width=800,height=600,resizable=yes,scrollbars=yes");
                 }, 3000);
             } else {
                 errorMsg.innerText = "Invalid username or password!";
