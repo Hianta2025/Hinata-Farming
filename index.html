@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login Page</title>
+    <title>Login Page with Messaging</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,6 +41,18 @@
             border: none;
             border-radius: 5px;
         }
+        .messages-box {
+            width: 350px;
+            margin: auto;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #333;
+            color: white;
+            height: 300px;
+            overflow-y: scroll;
+        }
     </style>
 </head>
 <body>
@@ -56,10 +68,17 @@
         <p id="error-msg" style="color: red;"></p>
     </div>
 
+    <div class="messages-box">
+        <h3>Messages</h3>
+        <div id="messages"></div>
+        <input type="text" id="message" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
     <script>
         var users = JSON.parse(localStorage.getItem("users")) || {}; // Load stored users
-        var activeUsers = {}; // Tracks logged-in users
-        var adminPassword = "admin123"; // Admin approval password
+        var messages = JSON.parse(localStorage.getItem("messages")) || [];
+        var adminPassword = "Hannah01."; // Admin approval password
 
         function saveUsers() {
             localStorage.setItem("users", JSON.stringify(users));
@@ -101,24 +120,43 @@
             }
 
             if (users[username].password === password) {
-                if (activeUsers[username]) {
-                    errorMsg.innerText = "User already logged in!";
-                } else {
-                    activeUsers[username] = true;
-                    sessionStorage.setItem("loggedInUser", username);
-                    let googleSheetUrl = "https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit";
-                    let popup = window.open(googleSheetUrl, "popupWindow", "width=800,height=600,resizable=yes,scrollbars=yes");
-                    popup.onbeforeunload = function () {
-                        delete activeUsers[username];
-                    };
-                }
+                sessionStorage.setItem("loggedInUser", username);
+                alert("Login successful!");
+                displayMessages();
             } else {
                 errorMsg.innerText = "Invalid password!";
             }
         }
 
+        function sendMessage() {
+            var message = document.getElementById("message").value;
+            var username = sessionStorage.getItem("loggedInUser");
+            if (!username) {
+                alert("You must log in first!");
+                return;
+            }
+            if (message.trim() === "") return;
+
+            var newMessage = { user: username, text: message };
+            messages.push(newMessage);
+            localStorage.setItem("messages", JSON.stringify(messages));
+            displayMessages();
+            document.getElementById("message").value = "";
+        }
+
+        function displayMessages() {
+            var messageBox = document.getElementById("messages");
+            messageBox.innerHTML = "";
+            messages.forEach(msg => {
+                var msgDiv = document.createElement("div");
+                msgDiv.textContent = msg.user + ": " + msg.text;
+                messageBox.appendChild(msgDiv);
+            });
+        }
+        
+        displayMessages(); // Show messages on load
+
         function approveUser() {
-            console.log("Registered users:", users); // Debugging log
             let pendingUsers = Object.keys(users).filter(username => !users[username].approved);
 
             if (pendingUsers.length === 0) {
