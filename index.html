@@ -42,30 +42,81 @@
         <input type="text" id="username" placeholder="Username" required><br>
         <input type="password" id="password" placeholder="Password" required><br>
         <button onclick="login()">Login</button>
+        <button onclick="register()">Register</button>
         <p id="error-msg" style="color: red;"></p>
     </div>
 
     <script>
-        function login() {
-            var users = {
-                "admin": "1234",
-                "user1": "password1"
-            };
+        var users = {}; // Stores usernames, passwords, and approval status
+        var activeUsers = {}; // Tracks logged-in users
+        var adminPassword = "admin123"; // Admin approval password
+
+        function register() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var errorMsg = document.getElementById("error-msg");
             
+            if (!username || !password) {
+                errorMsg.innerText = "Username and password required!";
+                return;
+            }
+            
+            if (users[username]) {
+                errorMsg.innerText = "Username already taken!";
+            } else {
+                users[username] = { password: password, approved: false };
+                errorMsg.innerText = "Registration successful! Waiting for admin approval.";
+            }
+        }
+
+        function login() {
             var username = document.getElementById("username").value;
             var password = document.getElementById("password").value;
             var errorMsg = document.getElementById("error-msg");
 
-            if (users[username] && users[username] === password) {
-                sessionStorage.setItem("loggedIn", "true");
-                setTimeout(() => {
-                    let googleSheetUrl = "https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit?pli=1&gid=0";
+            if (!users[username]) {
+                errorMsg.innerText = "User not found!";
+                return;
+            }
+            
+            if (!users[username].approved) {
+                errorMsg.innerText = "Account not approved by admin!";
+                return;
+            }
+
+            if (users[username].password === password) {
+                if (activeUsers[username]) {
+                    errorMsg.innerText = "User already logged in!";
+                } else {
+                    activeUsers[username] = true;
+                    sessionStorage.setItem("loggedInUser", username);
+                    let googleSheetUrl = "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit";
                     let popup = window.open(googleSheetUrl, "popupWindow", "width=800,height=600,resizable=yes,scrollbars=yes");
-                }, 3000);
+                    popup.onbeforeunload = function () {
+                        delete activeUsers[username];
+                    };
+                }
             } else {
-                errorMsg.innerText = "Invalid username or password!";
+                errorMsg.innerText = "Invalid password!";
+            }
+        }
+
+        function approveUser() {
+            var username = prompt("Enter username to approve:");
+            var adminPass = prompt("Enter admin password:");
+            if (adminPass === adminPassword) {
+                if (users[username]) {
+                    users[username].approved = true;
+                    alert(username + " has been approved!");
+                } else {
+                    alert("User not found!");
+                }
+            } else {
+                alert("Incorrect admin password!");
             }
         }
     </script>
+    <br>
+    <button onclick="approveUser()">Admin Approve User</button>
 </body>
 </html>
