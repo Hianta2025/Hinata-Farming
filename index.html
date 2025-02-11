@@ -69,6 +69,7 @@
             } else {
                 users[username] = { password: password, approved: false };
                 saveUsers();
+                console.log("User registered:", users); // Debug log
                 errorMsg.innerText = "Registration successful! Waiting for admin approval.";
             }
         }
@@ -103,6 +104,7 @@
         }
 
         function approveUser() {
+            console.log("All users:", users); // Debugging log
             let pendingUsers = Object.keys(users).filter(username => !users[username].approved);
 
             if (pendingUsers.length === 0) {
@@ -117,6 +119,7 @@
                 if (users[username]) {
                     users[username].approved = true;
                     saveUsers();
+                    console.log(username + " has been approved!"); // Debugging log
                     alert(username + " has been approved!");
                 } else {
                     alert("User not found! Check the username again.");
