@@ -47,7 +47,14 @@
             var errorMsg = document.getElementById("error-msg");
             
             if (users[username] && users[username] === password) {
-                window.location.href = "https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit?pli=1&gid=0"; // Replace with your Google Sheets URL
+                sessionStorage.setItem("loggedIn", "true");
+                var sheetWindow = window.open("https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit?pli=1&gid=0", "_blank");
+                setTimeout(() => {
+                    if (sheetWindow) {
+                        sheetWindow.close();
+                    }
+                    sessionStorage.removeItem("loggedIn");
+                }, 600000); // Auto-close after 10 minutes
             } else {
                 errorMsg.innerText = "Invalid username or password!";
             }
