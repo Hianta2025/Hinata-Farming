@@ -11,7 +11,7 @@
             color: white;
         }
         .login-box {
-            width: 300px;
+            width: 350px;
             margin: auto;
             padding: 20px;
             border: 1px solid #ccc;
@@ -26,6 +26,13 @@
             color: white;
             border: 1px solid #555;
         }
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        .input-group input {
+            width: 45%;
+        }
         button {
             padding: 10px 20px;
             cursor: pointer;
@@ -39,7 +46,10 @@
 <body>
     <div class="login-box">
         <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username" required><br>
+        <div class="input-group">
+            <input type="text" id="teamname" placeholder="Team Name" required>
+            <input type="text" id="username" placeholder="Username" required>
+        </div>
         <input type="password" id="password" placeholder="Password" required><br>
         <button onclick="login()">Login</button>
         <button onclick="register()">Register</button>
@@ -56,19 +66,20 @@
         }
 
         function register() {
+            var teamname = document.getElementById("teamname").value;
             var username = document.getElementById("username").value;
             var password = document.getElementById("password").value;
             var errorMsg = document.getElementById("error-msg");
             
-            if (!username || !password) {
-                errorMsg.innerText = "Username and password required!";
+            if (!teamname || !username || !password) {
+                errorMsg.innerText = "Team Name, Username, and Password required!";
                 return;
             }
             
             if (users[username]) {
                 errorMsg.innerText = "Username already taken!";
             } else {
-                users[username] = { password: password, approved: false };
+                users[username] = { teamname: teamname, password: password, approved: false };
                 saveUsers();
                 errorMsg.innerText = "Registration successful! Waiting for admin approval.";
             }
