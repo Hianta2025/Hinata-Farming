@@ -47,17 +47,21 @@
     </div>
 
     <script>
-        var users = JSON.parse(localStorage.getItem("users")) || {}; // Load stored users
-        var adminPassword = "admin123"; // Admin approval password
+        function getStoredUsers() {
+            return JSON.parse(localStorage.getItem("users")) || {};
+        }
 
-        function saveUsers() {
+        function saveUsers(users) {
             localStorage.setItem("users", JSON.stringify(users));
         }
+
+        var adminPassword = "admin123"; // Admin approval password
 
         function register() {
             var username = document.getElementById("username").value;
             var password = document.getElementById("password").value;
             var errorMsg = document.getElementById("error-msg");
+            var users = getStoredUsers();
             
             if (!username || !password) {
                 errorMsg.innerText = "Username and Password required!";
@@ -68,7 +72,7 @@
                 errorMsg.innerText = "Username already taken!";
             } else {
                 users[username] = { password: password, approved: false };
-                saveUsers();
+                saveUsers(users);
                 console.log("User registered:", users); // Debug log
                 errorMsg.innerText = "Registration successful! Waiting for admin approval.";
             }
@@ -78,6 +82,7 @@
             var username = document.getElementById("username").value;
             var password = document.getElementById("password").value;
             var errorMsg = document.getElementById("error-msg");
+            var users = getStoredUsers();
 
             if (!users[username]) {
                 errorMsg.innerText = "User not found!";
@@ -104,6 +109,7 @@
         }
 
         function approveUser() {
+            var users = getStoredUsers();
             console.log("All users:", users); // Debugging log
             let pendingUsers = Object.keys(users).filter(username => !users[username].approved);
 
@@ -118,7 +124,7 @@
             if (adminPass === adminPassword) {
                 if (users[username]) {
                     users[username].approved = true;
-                    saveUsers();
+                    saveUsers(users);
                     console.log(username + " has been approved!"); // Debugging log
                     alert(username + " has been approved!");
                 } else {
