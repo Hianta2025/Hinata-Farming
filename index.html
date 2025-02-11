@@ -7,6 +7,8 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 100px;
+            background-color: black;
+            color: white;
         }
         .login-box {
             width: 300px;
@@ -14,15 +16,36 @@
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 10px;
+            background-color: #222;
         }
         input {
             width: 90%;
             padding: 10px;
             margin: 10px 0;
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
         }
         button {
             padding: 10px 20px;
             cursor: pointer;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px gray;
+            z-index: 1000;
+            color: black;
         }
     </style>
 </head>
@@ -34,37 +57,57 @@
         <button onclick="login()">Login</button>
         <p id="error-msg" style="color: red;"></p>
     </div>
-    
+
+    <div id="telegramPopup" class="popup">
+        <h3>Latest Telegram Message</h3>
+        <p id="telegramMessage">Loading...</p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
     <script>
         function login() {
             var users = {
-                "admin": "1234", // Change credentials here
+                "admin": "1234",
                 "user1": "password1"
             };
             
             var username = document.getElementById("username").value;
             var password = document.getElementById("password").value;
             var errorMsg = document.getElementById("error-msg");
-            
+
             if (users[username] && users[username] === password) {
                 sessionStorage.setItem("loggedIn", "true");
-                var sheetWindow = window.open("https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit?pli=1&gid=0", "_blank");
-
+                showTelegramPopup();
                 setTimeout(() => {
-                    if (sheetWindow) {
-                        sheetWindow.close();
-                    }
-                    sessionStorage.removeItem("loggedIn");
-                }, 600000); // Auto-close after 10 minutes
+                    window.open("https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit?pli=1&gid=0", "_blank");
+                }, 3000);
             } else {
                 errorMsg.innerText = "Invalid username or password!";
             }
         }
 
-        // Clear session on page unload (refresh or close)
-        window.addEventListener("beforeunload", function () {
-            sessionStorage.removeItem("loggedIn");
-        });
+        function showTelegramPopup() {
+            fetch("https://api.telegram.org/bot<7111465773:AAEDf3XMtfsXBsImuMqPhvWEeFD4I_v5Tik>/getUpdates")
+                .then(response => response.json())
+                .then(data => {
+                    let messages = data.result;
+                    if (messages.length > 0) {
+                        let lastMessage = messages[messages.length - 1].message.text;
+                        document.getElementById("telegramMessage").innerText = lastMessage;
+                    } else {
+                        document.getElementById("telegramMessage").innerText = "No messages found.";
+                    }
+                    document.getElementById("telegramPopup").style.display = "block";
+                })
+                .catch(error => {
+                    console.error("Error fetching Telegram messages:", error);
+                    document.getElementById("telegramMessage").innerText = "Failed to load messages.";
+                });
+        }
+
+        function closePopup() {
+            document.getElementById("telegramPopup").style.display = "none";
+        }
     </script>
 </body>
 </html>
