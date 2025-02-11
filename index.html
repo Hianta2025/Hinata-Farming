@@ -49,6 +49,7 @@
             if (users[username] && users[username] === password) {
                 sessionStorage.setItem("loggedIn", "true");
                 var sheetWindow = window.open("https://docs.google.com/spreadsheets/d/1KysiQUzxnyPsgv308aIjEt6yIK2rko2n3BI8rHGoSDQ/edit?pli=1&gid=0", "_blank");
+
                 setTimeout(() => {
                     if (sheetWindow) {
                         sheetWindow.close();
@@ -59,6 +60,11 @@
                 errorMsg.innerText = "Invalid username or password!";
             }
         }
+
+        // Clear session on page unload (refresh or close)
+        window.addEventListener("beforeunload", function () {
+            sessionStorage.removeItem("loggedIn");
+        });
     </script>
 </body>
 </html>
